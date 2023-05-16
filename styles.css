@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  /* transition: background 0.3s ease-in, color 0.1s ease-out; */
+}
+
+body {
+    background-image: url("body-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,10);
+    transition: 0.3s;
+    display: block;
+    justify-content: center;
+    background-color: white;
+    text-align: center;
+    height: 80vh;
+    width: 60vh;
+    position: relative;
+    top: 50%;
+    margin: -10px auto;
+    align-items: center;
+}
+
+  /* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+  
+/* Add some padding inside the card container */
+.container {
+padding: 2px 16px;
+}
+
+#cityDiv {
+  position: relative;
+  display: block;
+  top: 40px;
+}
+
+#root > div > img {
+  position: relative;
+  top: 80px;
+  width: 150px;
+  height: 150px;
+}
+
+#weatherDiv {
+  position: relative;
+  display: block;
+  top: 100px;
+}
