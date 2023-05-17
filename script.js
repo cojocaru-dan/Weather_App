@@ -55,6 +55,7 @@ const displayCurrentWeather = (event) => {
 
 let favoritesArray = [];
 
+
 const addToFavorites = () => {
     let details = document.querySelector("#root > div").innerText.split("\n");
     // The text in the div is a string. We split the text at new line then split again to get 
