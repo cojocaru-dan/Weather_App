@@ -10,12 +10,14 @@ const checkInput = (event) => {
     }
 }
 
-const displayCurrentWeather = (event) => {
+const displayCurrentWeather = async (event) => {
+    loadData();
     const divContainer = document.querySelector(".card");
     divContainer.innerHTML = "";
     console.log(favoriteCitiesList);
     favoriteCitiesList.removeAttribute("hidden");
     favoriteButton.removeAttribute("hidden");
+
 
 
     fetch(`http://api.weatherapi.com/v1/current.json?key=691d5d844aa449fd96a94239231505&q=${event.target.value}`)
@@ -43,9 +45,9 @@ const displayCurrentWeather = (event) => {
             cityDetailsDiv.id = "cityDiv";
             weatherDetailsDiv.id = "weatherDiv";
 
-            cityDetailsDiv.innerText = cityDetails.join("\n\n");
+            cityDetailsDiv.innerText = cityDetails.join("\n");
             imageElement.src = image;
-            weatherDetailsDiv.innerText = weatherDetails.join("\n\n");
+            weatherDetailsDiv.innerText = weatherDetails.join("\n");
 
             divContainer.appendChild(cityDetailsDiv);
             divContainer.appendChild(imageElement);
@@ -84,16 +86,27 @@ const addToFavorites = () => {
     }
 }
 
+function loadData() {
+    spinner.removeAttribute('hidden');
+    fetch('https://www.mocky.io/v2/5185415ba171ea3a00704eed?mocky-delay=5000ms')
+      .then(response => response.json())
+      .then(data => {
+        spinner.setAttribute('hidden', '');
+        console.log(data)
+      });
+}
+
 
 const rootElement = document.getElementById("root");
-rootElement.insertAdjacentHTML("afterbegin", "<label for='citiesInput'>Choose city</label>");
+rootElement.insertAdjacentHTML("afterbegin", "<label for='citiesInput id='label'>Choose city </label>");
 rootElement.insertAdjacentHTML("beforeend", "<input list='citiesList' id='citiesInput'>");
 rootElement.insertAdjacentHTML("beforeend", "<datalist id='citiesList'></datalist>");
 rootElement.insertAdjacentHTML("beforeend", "<button id='favorite-button'>Add to favorites</button>");
 rootElement.insertAdjacentHTML("beforeend", "<ul id='favorite-cities'></ul>");
 rootElement.insertAdjacentHTML("beforeend", "<div class='card'></div>");
+rootElement.insertAdjacentHTML("beforeend", "<div hidden id='spinner'></div>");
 
-
+const spinner = document.getElementById("spinner");
 const favoriteCitiesList = document.getElementById("favorite-cities");
 const favoriteButton = document.getElementById("favorite-button");    
 const input = document.getElementById("citiesInput");
