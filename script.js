@@ -12,63 +12,75 @@ const checkInput = (event) => {
 
 const displayCurrentWeather = async (event) => {
     loadData();
-    const divContainer = document.querySelector(".card");
-    divContainer.innerHTML = "";
-    console.log(favoriteCitiesList);
-    favoriteCitiesList.removeAttribute("hidden");
-    favoriteButton.removeAttribute("hidden");
-
-
-
-    fetch(`http://api.weatherapi.com/v1/current.json?key=691d5d844aa449fd96a94239231505&q=${event.target.value}`)
-        .then(response => response.json())
-        .then(data => {
-            // console.log(data.current.condition.icon);
-            const cityDetails = [`City: ${event.target.value}`, 
-                                `Country: ${data.location.country}`, 
-                                `Region: ${data.location.region}`];
-
-            const image = `http:${data.current.condition.icon}`;
-            const weatherDetails = [data.current.condition.text, 
-                                    `Temperature: ${data.current.temp_c}`, 
-                                    `Feels like: ${data.current.feelslike_c}`, 
-                                    `UV index: ${data.current.uv}`, 
-                                    `Precipitation: ${data.current.precip_mm}`,
-                                    `Wind: ${data.current.wind_kph}`,
-                                    `Humidity: ${data.current.humidity}`];
-            let cityDetailsDiv = document.createElement("div");
-            let imageElement = document.createElement("img");
-            let weatherDetailsDiv = document.createElement("div");
-
-            cityDetailsDiv.className = "container";
-            weatherDetailsDiv.className = "container";
-            cityDetailsDiv.id = "cityDiv";
-            weatherDetailsDiv.id = "weatherDiv";
-
-            cityDetailsDiv.innerText = cityDetails.join("\n");
-            imageElement.src = image;
-            weatherDetailsDiv.innerText = weatherDetails.join("\n");
-
-            divContainer.appendChild(cityDetailsDiv);
-            divContainer.appendChild(imageElement);
-            divContainer.appendChild(weatherDetailsDiv);
-        });
-
-    fetch(`https://api.pexels.com/v1/search?query=${event.target.value}`, {
-        headers: {
-            Authorization: "a7oDvkiqEFS9SEzzaKaW2o44HYCt8M14YsGeLLs2iGEyb9uT3pk1i7JL"
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-            // if city has photos choose a random photo from photos list
-            if (data.photos.length > 0) {
-                const randomPhotoObj = data.photos[Math.floor((Math.random() * data.photos.length))];
-                const randomPhotoURL = randomPhotoObj.src.portrait;
-                console.log(randomPhotoURL);
-                card.style.backgroundImage = `url("${randomPhotoURL}")`;
-            }
-        });
+    if (event.target.value === "") {
+        card.innerHTML = "";
+        card.style.backgroundImage = "";
+        card.style.backgroundColor = "white";
+        favoriteButton.setAttribute('hidden', '');
+    } else {
+        setTimeout(() => {
+            const divContainer = document.querySelector(".card");
+            divContainer.innerHTML = "";
+            console.log(favoriteCitiesList);
+            favoriteCitiesList.removeAttribute("hidden");
+            favoriteButton.removeAttribute("hidden");
+    
+    
+    
+            fetch(`http://api.weatherapi.com/v1/current.json?key=691d5d844aa449fd96a94239231505&q=${event.target.value}`)
+                .then(response => response.json())
+                .then(data => {
+                    // console.log(data.current.condition.icon);
+                    const cityDetails = [`City: ${event.target.value}`, 
+                                        `Country: ${data.location.country}`, 
+                                        `Region: ${data.location.region}`];
+    
+                    const image = `http:${data.current.condition.icon}`;
+                    const weatherDetails = [data.current.condition.text, 
+                                            `Temperature: ${data.current.temp_c}`, 
+                                            `Feels like: ${data.current.feelslike_c}`, 
+                                            `UV index: ${data.current.uv}`, 
+                                            `Precipitation: ${data.current.precip_mm}`,
+                                            `Wind: ${data.current.wind_kph}`,
+                                            `Humidity: ${data.current.humidity}`];
+                    let cityDetailsDiv = document.createElement("div");
+                    let imageElement = document.createElement("img");
+                    let weatherDetailsDiv = document.createElement("div");
+    
+                    cityDetailsDiv.className = "container";
+                    weatherDetailsDiv.className = "container";
+                    cityDetailsDiv.id = "cityDiv";
+                    weatherDetailsDiv.id = "weatherDiv";
+    
+                    cityDetailsDiv.innerText = cityDetails.join("\n");
+                    imageElement.src = image;
+                    weatherDetailsDiv.innerText = weatherDetails.join("\n");
+    
+                    divContainer.appendChild(cityDetailsDiv);
+                    divContainer.appendChild(imageElement);
+                    divContainer.appendChild(weatherDetailsDiv);
+                });
+    
+            fetch(`https://api.pexels.com/v1/search?query=${event.target.value}`, {
+                headers: {
+                    Authorization: "a7oDvkiqEFS9SEzzaKaW2o44HYCt8M14YsGeLLs2iGEyb9uT3pk1i7JL"
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // if city has photos choose a random photo from photos list
+                    if (data.photos.length > 0) {
+                        const randomPhotoObj = data.photos[Math.floor((Math.random() * data.photos.length))];
+                        const randomPhotoURL = randomPhotoObj.src.portrait;
+                        console.log(randomPhotoURL);
+                        card.style.backgroundImage = `url("${randomPhotoURL}")`;
+                    } else {
+                        card.style.backgroundImage = "";
+                        card.style.backgroundColor = "white";
+                    }
+                });
+        }, 800);
+    };
 }
 
 const favoritesArray = [];
@@ -78,7 +90,7 @@ const addToFavorites = () => {
     let details = document.querySelector("#root > div").innerText.split("\n");
     // The text in the div is a string. We split the text at new line then split again to get 
     // only the city then split again to get the city name only. Previous format ("city: ${city}")
-    let city = details[0].split(" ")[1];
+    let city = details[0].split(" ").slice(1).join(" ");
     
     if(!favoritesArray.includes(city)){
         favoritesArray.push(city);    
@@ -88,17 +100,14 @@ const addToFavorites = () => {
 
 function loadData() {
     spinner.removeAttribute('hidden');
-    fetch('https://www.mocky.io/v2/5185415ba171ea3a00704eed?mocky-delay=5000ms')
-      .then(response => response.json())
-      .then(data => {
+    setTimeout(() => {
         spinner.setAttribute('hidden', '');
-        console.log(data)
-      });
+    }, 800);
 }
 
 
 const rootElement = document.getElementById("root");
-rootElement.insertAdjacentHTML("afterbegin", "<label for='citiesInput id='label'>Choose city </label>");
+rootElement.insertAdjacentHTML("afterbegin", "<label for='citiesInput' id='label'>Choose city </label>");
 rootElement.insertAdjacentHTML("beforeend", "<input list='citiesList' id='citiesInput'>");
 rootElement.insertAdjacentHTML("beforeend", "<datalist id='citiesList'></datalist>");
 rootElement.insertAdjacentHTML("beforeend", "<button id='favorite-button'>Add to favorites</button>");
