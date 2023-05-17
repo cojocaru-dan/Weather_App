@@ -57,3 +57,9 @@ padding: 2px 16px;
   display: block;
   top: 100px;
 }
+
+input, label {
+  position: relative;
+  top: 70px;
+  left: 70px;
+}
