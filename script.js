@@ -51,9 +51,25 @@ const displayCurrentWeather = (event) => {
             divContainer.appendChild(imageElement);
             divContainer.appendChild(weatherDetailsDiv);
         });
+
+    fetch(`https://api.pexels.com/v1/search?query=${event.target.value}`, {
+        headers: {
+            Authorization: "a7oDvkiqEFS9SEzzaKaW2o44HYCt8M14YsGeLLs2iGEyb9uT3pk1i7JL"
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            // if city has photos choose a random photo from photos list
+            if (data.photos.length > 0) {
+                const randomPhotoObj = data.photos[Math.floor((Math.random() * data.photos.length))];
+                const randomPhotoURL = randomPhotoObj.src.portrait;
+                console.log(randomPhotoURL);
+                card.style.backgroundImage = `url("${randomPhotoURL}")`;
+            }
+        });
 }
 
-let favoritesArray = [];
+const favoritesArray = [];
 
 const addToFavorites = () => {
     let details = document.querySelector("#root > div").innerText.split("\n");
@@ -69,14 +85,15 @@ const addToFavorites = () => {
 
 
 const rootElement = document.getElementById("root");
-rootElement.insertAdjacentHTML("afterbegin", "<input list='citiesList' id='citiesInput'>");
+rootElement.insertAdjacentHTML("afterbegin", "<label for='citiesInput'>Choose city</label>");
+rootElement.insertAdjacentHTML("beforeend", "<input list='citiesList' id='citiesInput'>");
 rootElement.insertAdjacentHTML("beforeend", "<datalist id='citiesList'></datalist>");
 rootElement.insertAdjacentHTML("beforeend", "<button id='favorite-button'>Add to favorites</button>");
 rootElement.insertAdjacentHTML("beforeend", "<ul id='favorite-cities'></ul>");
 rootElement.insertAdjacentHTML("beforeend", "<div class='card'></div>");
 
 
-var favoriteCitiesList = document.getElementById("favorite-cities");
+const favoriteCitiesList = document.getElementById("favorite-cities");
 const favoriteButton = document.getElementById("favorite-button");    
 const input = document.getElementById("citiesInput");
 const dataList = document.getElementById("citiesList");
